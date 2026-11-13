@@ -1,0 +1,52 @@
+name: setup
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  bash:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build both workspaces
+        run: lab-01/setup.sh
+      - name: Check the workspaces
+        run: |
+          set -euo pipefail
+          ws="$HOME/beyond-vibes-lab-01"
+          for task in pr146 common-pr65; do
+            test "$(git -C "$ws/$task/docs" rev-list --count HEAD)" = 1
+            test "$(git -C "$ws/$task/code" rev-list --count HEAD)" = 2
+            test -z "$(git -C "$ws/$task/docs" remote)"
+            test -z "$(git -C "$ws/$task/code" remote)"
+            test -z "$(git -C "$ws/$task/docs" status --porcelain)"
+            grep -q '`../code`' "$ws/$task/TASK.md"
+          done
+      - name: Refuse to overwrite without --force
+        run: |
+          if lab-01/setup.sh pr146 < /dev/null; then exit 1; fi
+      - name: Rebuild with --force
+        run: lab-01/setup.sh --force pr146
+
+  powershell:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build through the PowerShell wrapper
+        shell: pwsh
+        run: ./lab-01/setup.ps1 --dest "$env:RUNNER_TEMP/lab" pr146
+      - name: Check the workspace
+        shell: pwsh
+        run: |
+          $ws = Join-Path $env:RUNNER_TEMP 'lab/pr146'
+          if ((git -C "$ws/code" rev-list --count HEAD) -ne '2') { throw 'code repo should have 2 commits' }
+          if (-not (Test-Path "$ws/TASK.md")) { throw 'TASK.md missing' }

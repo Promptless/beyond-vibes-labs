@@ -1,0 +1,15 @@
+Beyond Vibes AI Labs
+Copyright 2026 Promptless, Inc.
+
+The scripts in this repository are distributed under the Apache License 2.0 in LICENSE.
+Written lab materials have separate terms in LICENSE-CONTENT.md.
+
+lab-01/setup.sh adapts the workspace preparation in DoGBench's dogbench/workspaces.py,
+and the lab-01/tasks/*.prompt.md files are DoGBench's frozen research prompts from
+dogbench/assets/research_inputs.json. DoGBench is Copyright 2026 Promptless, Inc.,
+and its software is licensed under the Apache License 2.0:
+https://github.com/Promptless/dogbench
+
+Upstream repositories that setup.sh downloads (doc-detective/doc-detective,
+doc-detective/common, doc-detective/doc-detective.github.io) are not part of this
+repository and keep their own licenses.

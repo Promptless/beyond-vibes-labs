@@ -1,0 +1,5 @@
+* text=auto
+*.sh text eol=lf
+lab-01/tasks/*.env text eol=lf
+# Verified byte-for-byte against DoGBench's frozen prompts.
+lab-01/tasks/*.prompt.md -text
