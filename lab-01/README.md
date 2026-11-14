@@ -105,7 +105,7 @@ The agents in the DoGBench paper ran without network access. Turning web access 
 
 Your user-level instructions and skills load as usual. Project-level files from your own repositories (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules`, and so on) don't, because the agent is working in Doc Detective's repository. To test one, copy it into `pr146/docs` before you start, and say so on the results sheet.
 
-A full run of this task with Codex CLI took under a minute. The notes for the other tools come from each tool's documentation, checked on Nov 13, 2026.
+Full runs of this task with Claude Code and with Codex CLI each took under a minute, using the commands below. The notes for the other tools come from each tool's documentation, checked on Nov 13, 2026.
 
 #### Claude Code
 
