@@ -25,10 +25,11 @@ Then run it the way you ran pr146, in this task's folder. Its `../code` is this 
 
 ```bash
 cd ~/beyond-vibes-lab-01/common-pr65/docs
-claude --add-dir ../code --disallowedTools WebFetch WebSearch
+claude -p "$(cat ../TASK.md)" --add-dir ../code --permission-mode acceptEdits \
+  --disallowedTools WebFetch WebSearch | tee ../my-reply.md
 ```
 
-For other tools, use the [agent notes](../README.md#agent-notes) with `common-pr65` in place of `pr146`. Start a **new** session, paste the prompt setup printed (everything between the two copy markers; it's also in `TASK.md`), and let it finish without steering it.
+For other tools, use the [agent notes](../README.md#agent-notes) with `common-pr65` in place of `pr146`. With an interactive tool, start a **new** session, paste the prompt setup printed (it's also in `TASK.md`), and let it finish without steering it.
 
 ## Score it
 

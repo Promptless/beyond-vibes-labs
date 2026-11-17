@@ -67,20 +67,34 @@ Manny works the task on screen first, from setup to tags. Then you do each step 
 
 ### 1. Run (10 minutes)
 
-1. Start a **new** session of your agent in `~/beyond-vibes-lab-01/pr146/docs`. See [Agent notes](#agent-notes) for how to do that and how to turn off web access in your tool.
-2. Paste the prompt setup printed, everything between the two copy markers, as your first message. If it has scrolled away, it's also in `~/beyond-vibes-lab-01/pr146/TASK.md`.
-3. Let it run once. Don't steer it or ask for a second draft. If it asks a question, answer "use your judgment". Approve file edits in `docs/` and reads of `../code/` if your tool asks.
-
-When it finishes, save its work:
+Run your agent once on the task, with web access off. For Claude Code and Codex, one command sends the prompt and saves the agent's final reply to `my-reply.md`:
 
 ```bash
-cd ~/beyond-vibes-lab-01/pr146
-git -C docs diff > my-patch.diff
+cd ~/beyond-vibes-lab-01/pr146/docs
+
+# Claude Code
+claude -p "$(cat ../TASK.md)" --add-dir ../code --permission-mode acceptEdits \
+  --disallowedTools WebFetch WebSearch | tee ../my-reply.md
+
+# or Codex
+codex exec --sandbox workspace-write -c web_search='"disabled"' \
+  -o ../my-reply.md "$(cat ../TASK.md)"
 ```
 
-`git diff` leaves out new files, so also run `git -C docs status --short` to list any the agent created. Save the agent's final message to `my-reply.md` in the same folder, and keep the session or transcript open for the tag step.
+A run takes a minute or two and shows little while it works. Wait for your terminal prompt to come back, and don't steer the agent or ask for a second draft.
 
-If your agent replied `NO_DOC_CHANGES_NEEDED`, that's its decision. Save the reply and move on.
+For Copilot, Cursor, or OpenCode, start a **new** session in `~/beyond-vibes-lab-01/pr146/docs` as the [agent notes](#agent-notes) describe, and paste the prompt setup printed (it's also in `TASK.md`). If it asks a question, answer "use your judgment". When it finishes, copy its final message into `~/beyond-vibes-lab-01/pr146/my-reply.md`.
+
+Then save the patch, still in `docs/`:
+
+```bash
+git diff > ../my-patch.diff
+git status --short   # lists new files, which diff leaves out
+```
+
+Keep the transcript for the tag step. For Claude Code, run `claude --continue` in the same `docs` folder to reopen the session. Codex prints its steps in your terminal.
+
+If your agent replied `NO_DOC_CHANGES_NEEDED`, that's its decision. Move on.
 
 ### 2. Score (10 minutes)
 
@@ -113,20 +127,11 @@ Full runs of this task with Claude Code and with Codex CLI each took under a min
 
 #### Claude Code
 
-```bash
-cd ~/beyond-vibes-lab-01/pr146/docs
-claude --add-dir ../code --disallowedTools WebFetch WebSearch
-```
-
-`--add-dir ../code` lets Claude Code read the code change without asking for each file. `--disallowedTools` removes the web tools for this session. ([CLI reference](https://code.claude.com/docs/en/cli-reference), [permissions](https://code.claude.com/docs/en/permissions))
+Use the command in [Run](#1-run-10-minutes). `-p` runs the prompt once without an interactive session, and `--permission-mode acceptEdits` lets it edit `docs/` without stopping to ask. `--add-dir ../code` lets Claude Code read the code change without asking for each file. `--disallowedTools` removes the web tools for this session. To work interactively instead, run `claude --add-dir ../code --disallowedTools WebFetch WebSearch` and paste the prompt. ([CLI reference](https://code.claude.com/docs/en/cli-reference), [permissions](https://code.claude.com/docs/en/permissions))
 
 #### Codex CLI
 
-```bash
-codex --cd ~/beyond-vibes-lab-01/pr146/docs --sandbox workspace-write -c web_search='"disabled"'
-```
-
-The `workspace-write` sandbox limits edits to `docs/` and turns network access off. Codex can still read `../code`. `web_search="disabled"` turns off Codex's built-in web search, which otherwise defaults to a cached index. Don't pass `--search`. ([sandboxing](https://learn.chatgpt.com/docs/sandboxing), [config reference](https://learn.chatgpt.com/docs/config-file/config-reference))
+Use the command in [Run](#1-run-10-minutes). `codex exec` runs the prompt once, and `-o` writes the final reply to a file. The `workspace-write` sandbox limits edits to `docs/` and turns network access off. Codex can still read `../code`. `web_search="disabled"` turns off Codex's built-in web search, which otherwise defaults to a cached index. Don't pass `--search`. ([sandboxing](https://learn.chatgpt.com/docs/sandboxing), [config reference](https://learn.chatgpt.com/docs/config-file/config-reference))
 
 #### GitHub Copilot CLI
 
