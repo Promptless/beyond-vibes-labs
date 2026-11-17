@@ -235,12 +235,27 @@ cat <<EOF
 
 Workspaces are ready in $DEST
 
-To run the $main task:
-  1. Start your agent in $DEST/$main/docs
-  2. Paste everything between the two lines below as your first message.
-     It's also saved in $DEST/$main/TASK.md.
+To run the $main task with any agent, start it in $DEST/$main/docs
+and paste everything between the two lines below as your first message.
+It's also saved in $DEST/$main/TASK.md.
 
 -------------------- copy from the next line --------------------
 EOF
 cat "$DEST/$main/TASK.md"
 printf '\n-------------------- copy to the line above ---------------------\n'
+
+cat <<EOF
+
+With Claude Code or Codex, skip the paste and run one of these instead.
+The agent's final reply is saved to $DEST/$main/my-reply.md.
+
+  cd "$DEST/$main/docs"
+
+EOF
+cat <<'EOF'
+  claude -p "$(cat ../TASK.md)" --add-dir ../code --permission-mode acceptEdits \
+    --disallowedTools WebFetch WebSearch | tee ../my-reply.md
+
+  codex exec --sandbox workspace-write -c web_search='"disabled"' \
+    -o ../my-reply.md "$(cat ../TASK.md)"
+EOF
