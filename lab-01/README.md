@@ -61,6 +61,8 @@ The workspaces sit outside this repository so your agent can't read the rubric o
 
 ## During the lab
 
+Manny works the task on screen first, from setup to tags. Then you do each step yourself.
+
 ### 1. Run (10 minutes)
 
 1. Start a **new** session of your agent in `~/beyond-vibes-lab-01/pr146/docs`. See [Agent notes](#agent-notes) for how to do that and how to turn off web access in your tool.
@@ -78,11 +80,11 @@ git -C docs diff > my-patch.diff
 
 If your agent replied `NO_DOC_CHANGES_NEEDED`, that's its decision. Save the reply and move on.
 
-### 2. Score (15 minutes)
+### 2. Score (10 minutes)
 
 Open [the score sheet](scoring/score-sheet.md) and [the rubric](scoring/rubric-pr146.md). Give each criterion a verdict, quoting the line from your patch behind it. If C1 fails or C2 is violated, the score can't go above 60.
 
-### 3. Tag (10 minutes)
+### 3. Tag (5 minutes)
 
 Use [the tag sheet](tags/tag-sheet.md) to mark the failure modes in your patch, then the investigation patterns in your agent's transcript. If you finish early, start the [stretch task](stretch/README.md).
 
