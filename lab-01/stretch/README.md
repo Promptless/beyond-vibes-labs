@@ -24,7 +24,7 @@ powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1 common-pr65
 Then do what you did for pr146:
 
 1. Start a **new** agent session in `~/beyond-vibes-lab-01/common-pr65/docs`.
-2. Paste the full contents of `~/beyond-vibes-lab-01/common-pr65/TASK.md`.
+2. Paste the prompt setup printed, everything between the two copy markers. It's also in `~/beyond-vibes-lab-01/common-pr65/TASK.md`.
 3. Let it finish without steering it.
 
 ## Score it

@@ -57,6 +57,8 @@ Setup takes under a minute and needs only Git and a network connection. It creat
 └── common-pr65/   The stretch task, with the same layout.
 ```
 
+When setup finishes, it prints the pr146 prompt between a `copy from the next line` marker and a `copy to the line above` marker. That's the text you'll paste into your agent.
+
 The workspaces sit outside this repository so your agent can't read the rubric or the worked example while it works. Upstream history and remotes are removed, so the agent can't see how the maintainer actually documented the change.
 
 ## During the lab
@@ -66,7 +68,7 @@ Manny works the task on screen first, from setup to tags. Then you do each step 
 ### 1. Run (10 minutes)
 
 1. Start a **new** session of your agent in `~/beyond-vibes-lab-01/pr146/docs`. See [Agent notes](#agent-notes) for how to do that and how to turn off web access in your tool.
-2. Paste the full contents of `~/beyond-vibes-lab-01/pr146/TASK.md` as your first message.
+2. Paste the prompt setup printed, everything between the two copy markers, as your first message. If it has scrolled away, it's also in `~/beyond-vibes-lab-01/pr146/TASK.md`.
 3. Let it run once. Don't steer it or ask for a second draft. If it asks a question, answer "use your judgment". Approve file edits in `docs/` and reads of `../code/` if your tool asks.
 
 When it finishes, save its work:

@@ -226,11 +226,21 @@ for task in "${TASKS[@]}"; do
   build_task "$task"
 done
 
+main="${TASKS[0]}"
+for task in "${TASKS[@]}"; do
+  [ "$task" = pr146 ] && main=pr146
+done
+
 cat <<EOF
 
 Workspaces are ready in $DEST
 
-To run the main task:
-  1. Start your agent in $DEST/pr146/docs
-  2. Paste the full contents of $DEST/pr146/TASK.md as your first message.
+To run the $main task:
+  1. Start your agent in $DEST/$main/docs
+  2. Paste everything between the two lines below as your first message.
+     It's also saved in $DEST/$main/TASK.md.
+
+-------------------- copy from the next line --------------------
 EOF
+cat "$DEST/$main/TASK.md"
+printf '\n-------------------- copy to the line above ---------------------\n'
