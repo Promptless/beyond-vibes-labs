@@ -32,6 +32,18 @@ jobs:
             grep -q '`../code`' "$ws/$task/TASK.md"
           done
           test -z "$(git status --porcelain)"
+      - name: Show a patch
+        run: |
+          set -euo pipefail
+          docs="$HOME/beyond-vibes-lab-01/pr146/docs"
+          printf '\nExtra line from CI.\n' >> "$docs/README.md"
+          printf '# New page\n' > "$docs/new-page.md"
+          before="$(git -C "$docs" status --porcelain)"
+          lab-01/show-patch.sh --no-open
+          test "$(git -C "$docs" status --porcelain)" = "$before"
+          grep -q 'new-page.md' "$HOME/beyond-vibes-lab-01/pr146/my-patch.diff"
+          grep -q '<ins>' "$HOME/beyond-vibes-lab-01/pr146/my-patch.html"
+          grep -q 'new file' "$HOME/beyond-vibes-lab-01/pr146/my-patch.html"
       - name: Refuse to overwrite without --force
         run: |
           if lab-01/setup.sh pr146 < /dev/null; then exit 1; fi
@@ -51,3 +63,9 @@ jobs:
           $ws = Join-Path $env:RUNNER_TEMP 'lab/pr146'
           if ((git -C "$ws/code" rev-list --count HEAD) -ne '2') { throw 'code repo should have 2 commits' }
           if (-not (Test-Path "$ws/TASK.md")) { throw 'TASK.md missing' }
+      - name: Show a patch through the PowerShell wrapper
+        shell: pwsh
+        run: |
+          Add-Content -Path "$env:RUNNER_TEMP/lab/pr146/docs/README.md" -Value 'Extra line from CI.'
+          ./lab-01/show-patch.ps1 --dest "$env:RUNNER_TEMP/lab" --no-open pr146
+          if (-not (Select-String -Path "$env:RUNNER_TEMP/lab/pr146/my-patch.html" -Pattern '<ins>' -Quiet)) { throw 'my-patch.html has no additions' }

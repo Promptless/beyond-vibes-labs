@@ -38,14 +38,13 @@ For other tools, use the [agent notes](../README.md#agent-notes) with `common-pr
 | The agent replied `NO_DOC_CHANGES_NEEDED` and changed no files | 100 |
 | The agent wrote a patch, or said no change was needed but edited files anyway | 0 |
 
-Check for edits with:
+Check for edits from your `beyond-vibes-labs` clone:
 
 ```bash
-cd ~/beyond-vibes-lab-01/common-pr65/docs
-git status --short
+lab-01/show-patch.sh common-pr65
 ```
 
-No output means no edits.
+In PowerShell, run `powershell -ExecutionPolicy Bypass -File .\lab-01\show-patch.ps1 common-pr65`. The page that opens says whether the agent changed any files.
 
 ## If it wrote a patch, find the cue that misled it
 

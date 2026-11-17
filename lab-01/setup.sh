@@ -259,3 +259,14 @@ cat <<'EOF'
   codex exec --sandbox workspace-write -c web_search='"disabled"' \
     -o ../my-reply.md "$(cat ../TASK.md)"
 EOF
+
+show_cmd="\"$LAB_DIR/show-patch.sh\""
+[ "$DEST" = "${HOME}/beyond-vibes-lab-01" ] || show_cmd="$show_cmd --dest \"$DEST\""
+[ "$main" = pr146 ] || show_cmd="$show_cmd $main"
+cat <<EOF
+
+When the agent finishes, run this to see its changes as a page in your browser.
+It also saves them to $DEST/$main/my-patch.diff.
+
+  $show_cmd
+EOF

@@ -85,12 +85,19 @@ A run takes a minute or two and shows little while it works. Wait for your termi
 
 For Copilot, Cursor, or OpenCode, start a **new** session in `~/beyond-vibes-lab-01/pr146/docs` as the [agent notes](#agent-notes) describe, and paste the prompt setup printed (it's also in `TASK.md`). If it asks a question, answer "use your judgment". When it finishes, copy its final message into `~/beyond-vibes-lab-01/pr146/my-reply.md`.
 
-Then save the patch, still in `docs/`:
+Then save the agent's changes and open them as a page in your browser, with added text in green and removed text struck through in red. From your `beyond-vibes-labs` clone:
 
 ```bash
-git diff > ../my-patch.diff
-git status --short   # lists new files, which diff leaves out
+lab-01/show-patch.sh
 ```
+
+In PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\lab-01\show-patch.ps1
+```
+
+It saves `my-patch.diff` and `my-patch.html` in `~/beyond-vibes-lab-01/pr146`, new files included, and opens the page. Run it again any time to reopen it.
 
 Keep the transcript for the tag step. For Claude Code, run `claude --continue` in the same `docs` folder to reopen the session. Codex prints its steps in your terminal.
 
@@ -98,7 +105,7 @@ If your agent replied `NO_DOC_CHANGES_NEEDED`, that's its decision. Move on.
 
 ### 2. Score (10 minutes)
 
-Open [the score sheet](scoring/score-sheet.md) and [the rubric](scoring/rubric-pr146.md). Give each criterion a verdict, quoting the line from your patch behind it. If C1 fails or C2 is violated, the score can't go above 60.
+Open [the score sheet](scoring/score-sheet.md) and [the rubric](scoring/rubric-pr146.md), with your agent's changes in `my-patch.html` beside them. Give each criterion a verdict, quoting the line from your patch behind it. If C1 fails or C2 is violated, the score can't go above 60.
 
 ### 3. Tag (5 minutes)
 
@@ -185,7 +192,7 @@ In PowerShell:
 powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1 --force pr146
 ```
 
-`--force` deletes the old workspace, including your saved patch, so move `my-patch.diff` and `my-reply.md` somewhere else first.
+`--force` deletes the old workspace, including your saved patch, so move `my-patch.diff`, `my-patch.html`, and `my-reply.md` somewhere else first.
 
 Bring the [review checklist](checklist/review-checklist.md) to your agent's next docs PR.
 
