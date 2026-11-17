@@ -46,10 +46,10 @@ powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1
 
 Or run `lab-01/setup.sh` from Git Bash, which comes with Git for Windows. The PowerShell script runs the same script through Git Bash.
 
-Setup takes under a minute and needs only Git and a network connection. It creates `~/beyond-vibes-lab-01` (on Windows, `%USERPROFILE%\beyond-vibes-lab-01`) with one folder per task:
+Setup takes under a minute and needs only Git and a network connection. It creates `~/lab-01-tasks` (on Windows, `%USERPROFILE%\lab-01-tasks`) with one folder per task:
 
 ```
-~/beyond-vibes-lab-01/
+~/lab-01-tasks/
 ├── pr146/
 │   ├── docs/      Doc Detective's repository before the change. Your agent works here.
 │   ├── code/      The same repository with the code change as its latest commit. Read it; don't edit it.
@@ -67,14 +67,14 @@ Manny works the task on screen first, from setup to tags. Then you do each step 
 
 ### 1. Run (10 minutes)
 
-1. Start a **new** session of your agent in `~/beyond-vibes-lab-01/pr146/docs`. See [Agent notes](#agent-notes) for how to do that and how to turn off web access in your tool.
-2. Paste the prompt setup printed, everything between the two copy markers, as your first message. If it has scrolled away, it's also in `~/beyond-vibes-lab-01/pr146/TASK.md`.
+1. Start a **new** session of your agent in `~/lab-01-tasks/pr146/docs`. See [Agent notes](#agent-notes) for how to do that and how to turn off web access in your tool.
+2. Paste the prompt setup printed, everything between the two copy markers, as your first message. If it has scrolled away, it's also in `~/lab-01-tasks/pr146/TASK.md`.
 3. Let it run once. Don't steer it or ask for a second draft. If it asks a question, answer "use your judgment". Approve file edits in `docs/` and reads of `../code/` if your tool asks.
 
 When it finishes, save its work:
 
 ```bash
-cd ~/beyond-vibes-lab-01/pr146
+cd ~/lab-01-tasks/pr146
 git -C docs diff > my-patch.diff
 ```
 
@@ -114,7 +114,7 @@ Full runs of this task with Claude Code and with Codex CLI each took under a min
 #### Claude Code
 
 ```bash
-cd ~/beyond-vibes-lab-01/pr146/docs
+cd ~/lab-01-tasks/pr146/docs
 claude --add-dir ../code --disallowedTools WebFetch WebSearch
 ```
 
@@ -123,7 +123,7 @@ claude --add-dir ../code --disallowedTools WebFetch WebSearch
 #### Codex CLI
 
 ```bash
-codex --cd ~/beyond-vibes-lab-01/pr146/docs --sandbox workspace-write -c web_search='"disabled"'
+codex --cd ~/lab-01-tasks/pr146/docs --sandbox workspace-write -c web_search='"disabled"'
 ```
 
 The `workspace-write` sandbox limits edits to `docs/` and turns network access off. Codex can still read `../code`. `web_search="disabled"` turns off Codex's built-in web search, which otherwise defaults to a cached index. Don't pass `--search`. ([sandboxing](https://learn.chatgpt.com/docs/sandboxing), [config reference](https://learn.chatgpt.com/docs/config-file/config-reference))
@@ -131,22 +131,22 @@ The `workspace-write` sandbox limits edits to `docs/` and turns network access o
 #### GitHub Copilot CLI
 
 ```bash
-copilot -C ~/beyond-vibes-lab-01/pr146/docs --add-dir=../code --deny-tool='url'
+copilot -C ~/lab-01-tasks/pr146/docs --add-dir=../code --deny-tool='url'
 ```
 
 `--add-dir=../code` grants access to the code change. `--deny-tool='url'` blocks URL access through web fetch and the shell. ([command reference](https://docs.github.com/en/copilot/reference/cli-command-reference))
 
 #### Cursor
 
-- **Editor:** open `~/beyond-vibes-lab-01/pr146/docs` as the folder, then start a new Agent chat.
-- **CLI:** run `agent --workspace ~/beyond-vibes-lab-01/pr146/docs`.
+- **Editor:** open `~/lab-01-tasks/pr146/docs` as the folder, then start a new Agent chat.
+- **CLI:** run `agent --workspace ~/lab-01-tasks/pr146/docs`.
 
 Cursor reads files outside the workspace, including `../code`, without asking by default. Its docs don't describe a switch that turns off the web search tool. To hold web fetches for your approval, set **Settings > Agents > Approvals & Execution** to **Allowlist**, and decline any web request the agent makes. ([agent security](https://cursor.com/docs/agent/security), [CLI permissions](https://cursor.com/docs/cli/reference/permissions))
 
 #### OpenCode
 
 ```bash
-opencode ~/beyond-vibes-lab-01/pr146/docs
+opencode ~/lab-01-tasks/pr146/docs
 ```
 
 Before you start, create `opencode.jsonc` in `docs/` to turn off web fetch and web search. OpenCode 2 uses this form:
@@ -164,7 +164,7 @@ OpenCode 1 uses `{ "permission": { "webfetch": "deny", "websearch": "deny" } }`,
 
 #### Any other agent
 
-Start it in `~/beyond-vibes-lab-01/pr146/docs`, let it read `../code`, and turn off web access if the tool allows it. If it can't be turned off, note that on the results sheet.
+Start it in `~/lab-01-tasks/pr146/docs`, let it read `../code`, and turn off web access if the tool allows it. If it can't be turned off, note that on the results sheet.
 
 ## After the lab
 

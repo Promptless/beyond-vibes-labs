@@ -9,7 +9,7 @@
 #   code/     the source repository with the code change as its latest commit; read-only reference
 #   TASK.md   the prompt to paste into your agent
 #
-# DIR defaults to ~/beyond-vibes-lab-01, outside this repository, so an agent
+# DIR defaults to ~/lab-01-tasks, outside this repository, so an agent
 # working in docs/ can't read the rubric or the worked example.
 #
 # The workspace logic follows DoGBench's dogbench/workspaces.py (Apache-2.0):
@@ -19,7 +19,7 @@
 set -euo pipefail
 
 LAB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEST="${HOME}/beyond-vibes-lab-01"
+DEST="${HOME}/lab-01-tasks"
 FORCE=0
 TASKS=()
 NO_WEB_LINE="Do not browse the web, fetch URLs, or look up the upstream project or pull request."
