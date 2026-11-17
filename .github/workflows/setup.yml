@@ -22,7 +22,7 @@ jobs:
       - name: Check the workspaces
         run: |
           set -euo pipefail
-          ws="$HOME/lab-01-tasks"
+          ws="$GITHUB_WORKSPACE/tasks"
           for task in pr146 common-pr65; do
             test "$(git -C "$ws/$task/docs" rev-list --count HEAD)" = 1
             test "$(git -C "$ws/$task/code" rev-list --count HEAD)" = 2
@@ -31,6 +31,7 @@ jobs:
             test -z "$(git -C "$ws/$task/docs" status --porcelain)"
             grep -q '`../code`' "$ws/$task/TASK.md"
           done
+          test -z "$(git status --porcelain)"
       - name: Refuse to overwrite without --force
         run: |
           if lab-01/setup.sh pr146 < /dev/null; then exit 1; fi

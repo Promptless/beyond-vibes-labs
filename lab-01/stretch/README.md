@@ -23,8 +23,8 @@ powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1 common-pr65
 
 Then do what you did for pr146:
 
-1. Start a **new** agent session in `~/lab-01-tasks/common-pr65/docs`.
-2. Paste the prompt setup printed, everything between the two copy markers. It's also in `~/lab-01-tasks/common-pr65/TASK.md`.
+1. Start a **new** agent session in `~/beyond-vibes-labs/tasks/common-pr65/docs`.
+2. Paste the prompt setup printed, everything between the two copy markers. It's also in `~/beyond-vibes-labs/tasks/common-pr65/TASK.md`.
 3. Let it finish without steering it.
 
 ## Score it
@@ -37,7 +37,7 @@ Then do what you did for pr146:
 Check for edits with:
 
 ```bash
-cd ~/lab-01-tasks/common-pr65/docs
+cd ~/beyond-vibes-labs/tasks/common-pr65/docs
 git status --short
 ```
 
