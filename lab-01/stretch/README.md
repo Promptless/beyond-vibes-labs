@@ -24,7 +24,7 @@ powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1 common-pr65
 Then run it the way you ran pr146, in this task's folder. Its `../code` is this task's own code change, so give your agent that folder, not pr146's. For Claude Code:
 
 ```bash
-cd ~/beyond-vibes-labs/tasks/common-pr65/docs
+cd ~/beyond-vibes-lab-01/common-pr65/docs
 claude --add-dir ../code --disallowedTools WebFetch WebSearch
 ```
 
@@ -40,7 +40,7 @@ For other tools, use the [agent notes](../README.md#agent-notes) with `common-pr
 Check for edits with:
 
 ```bash
-cd ~/beyond-vibes-labs/tasks/common-pr65/docs
+cd ~/beyond-vibes-lab-01/common-pr65/docs
 git status --short
 ```
 

@@ -9,7 +9,8 @@
 #   code/     the source repository with the code change as its latest commit; read-only reference
 #   TASK.md   the prompt to paste into your agent
 #
-# DIR defaults to tasks/ at the top of this clone, which Git ignores.
+# DIR defaults to ~/beyond-vibes-lab-01, a separate folder next to this clone,
+# so an agent working in docs/ can't read the rubric or the worked example.
 #
 # The workspace logic follows DoGBench's dogbench/workspaces.py (Apache-2.0):
 # upstream history and remotes are removed, and every input is checked against
@@ -18,7 +19,7 @@
 set -euo pipefail
 
 LAB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEST="$(cd "$LAB_DIR/.." && pwd)/tasks"
+DEST="${HOME}/beyond-vibes-lab-01"
 FORCE=0
 TASKS=()
 NO_WEB_LINE="Do not browse the web, fetch URLs, or look up the upstream project or pull request."
@@ -30,7 +31,7 @@ export GIT_AUTHOR_DATE="2000-01-01T00:00:00+00:00" GIT_COMMITTER_DATE="2000-01-0
 export GIT_TERMINAL_PROMPT=0
 
 usage() {
-  sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+  sed -n '2,13p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
 }
 
 die() {

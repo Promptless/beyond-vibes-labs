@@ -22,7 +22,7 @@ jobs:
       - name: Check the workspaces
         run: |
           set -euo pipefail
-          ws="$GITHUB_WORKSPACE/tasks"
+          ws="$HOME/beyond-vibes-lab-01"
           for task in pr146 common-pr65; do
             test "$(git -C "$ws/$task/docs" rev-list --count HEAD)" = 1
             test "$(git -C "$ws/$task/code" rev-list --count HEAD)" = 2
