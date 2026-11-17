@@ -21,11 +21,14 @@ In PowerShell:
 powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1 common-pr65
 ```
 
-Then do what you did for pr146:
+Then run it the way you ran pr146, in this task's folder. Its `../code` is this task's own code change, so give your agent that folder, not pr146's. For Claude Code:
 
-1. Start a **new** agent session in `~/beyond-vibes-labs/tasks/common-pr65/docs`.
-2. Paste the prompt setup printed, everything between the two copy markers. It's also in `~/beyond-vibes-labs/tasks/common-pr65/TASK.md`.
-3. Let it finish without steering it.
+```bash
+cd ~/beyond-vibes-labs/tasks/common-pr65/docs
+claude --add-dir ../code --disallowedTools WebFetch WebSearch
+```
+
+For other tools, use the [agent notes](../README.md#agent-notes) with `common-pr65` in place of `pr146`. Start a **new** session, paste the prompt setup printed (everything between the two copy markers; it's also in `TASK.md`), and let it finish without steering it.
 
 ## Score it
 
