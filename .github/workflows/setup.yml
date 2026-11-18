@@ -44,11 +44,19 @@ jobs:
           grep -q 'new-page.md' "$HOME/beyond-vibes-lab-01/pr146/my-patch.diff"
           grep -q '<ins>' "$HOME/beyond-vibes-lab-01/pr146/my-patch.html"
           grep -q 'new file' "$HOME/beyond-vibes-lab-01/pr146/my-patch.html"
+          grep -q 'everything else in the file is unchanged' "$HOME/beyond-vibes-lab-01/pr146/my-patch.html"
       - name: Refuse to overwrite without --force
         run: |
           if lab-01/setup.sh pr146 < /dev/null; then exit 1; fi
       - name: Rebuild with --force
-        run: lab-01/setup.sh --force pr146
+        run: |
+          set -euo pipefail
+          lab-01/setup.sh --force pr146 > "$RUNNER_TEMP/setup-out.txt"
+          cat "$RUNNER_TEMP/setup-out.txt"
+          task_dir="$HOME/beyond-vibes-lab-01/pr146"
+          grep -qF 'step 4 in lab-01/README.md' "$RUNNER_TEMP/setup-out.txt"
+          grep -qF "claude -p \"\$(cat \"$task_dir/TASK.md\")\"" "$RUNNER_TEMP/setup-out.txt"
+          grep -qF -- "--add-dir \"$task_dir/code\"" "$RUNNER_TEMP/setup-out.txt"
 
   powershell:
     runs-on: windows-latest
@@ -69,3 +77,4 @@ jobs:
           Add-Content -Path "$env:RUNNER_TEMP/lab/pr146/docs/README.md" -Value 'Extra line from CI.'
           ./lab-01/show-patch.ps1 --dest "$env:RUNNER_TEMP/lab" --no-open pr146
           if (-not (Select-String -Path "$env:RUNNER_TEMP/lab/pr146/my-patch.html" -Pattern '<ins>' -Quiet)) { throw 'my-patch.html has no additions' }
+          if (-not (Select-String -Path "$env:RUNNER_TEMP/lab/pr146/my-patch.html" -Pattern 'everything else in the file is unchanged' -SimpleMatch -Quiet)) { throw 'my-patch.html is missing the unchanged-text note' }

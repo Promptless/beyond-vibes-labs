@@ -2,8 +2,8 @@
 
 Scoring tells you how far the patch got. Tagging tells you why it fell short. Do it in two passes:
 
-1. **The patch.** Read your agent's diff and mark every failure mode it shows. One patch can show several, or none.
-2. **The transcript.** Scroll back through what your agent did before it wrote, and mark the investigation patterns you see.
+1. **The patch.** Read your agent's changes on `my-patch.html` and mark every failure mode they show. One patch can show several, or none.
+2. **The transcript.** Scroll back through what your agent did before it wrote, and mark the investigation patterns you see. [Step 7 of the lab](../README.md#7-tag-the-failure-modes-5-minutes) shows how to reopen it for your tool.
 
 The DoGBench rate beside each tag is the share of the 1,267 submissions that DoGBench audited in which that problem appeared, so you can see whether your agent's failures are common or unusual.
 
@@ -38,4 +38,4 @@ The DoGBench rubric's two P0 criteria line up with two tags:
 - Leaving out the `-i` alias, or presenting multiple inputs as files only, usually means **incomplete conceptual or reference coverage**.
 - Claiming URL inputs work is a **technical inaccuracy**. When the transcript shows the agent never traced how inputs are resolved, add the **missed decisive evidence** pattern.
 
-Post your score, your tags, and your tool and model to the room's results sheet. Don't post the patch itself.
+Next, post your results and compare: [step 8 of the lab](../README.md#8-post-your-results-and-compare-5-minutes).

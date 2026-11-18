@@ -9,27 +9,30 @@ For fast finishers. This task tests the decision before the writing: does this c
 
 ## Run it
 
-`setup.sh` builds this workspace alongside pr146. If you set up only pr146, build it now from your `beyond-vibes-labs` clone:
+Setup builds this task's workspace, `~/beyond-vibes-lab-01/common-pr65`, alongside pr146's. If that folder is missing, build it now:
 
 ```bash
+cd ~/beyond-vibes-labs
 lab-01/setup.sh common-pr65
 ```
 
 In PowerShell:
 
 ```powershell
+cd ~\beyond-vibes-labs
 powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1 common-pr65
 ```
 
-Then run it the way you ran pr146, in this task's folder. Its `../code` is this task's own code change, so give your agent that folder, not pr146's. For Claude Code:
+Then run it the way you ran pr146, in this task's folder. This task has its own code change in `~/beyond-vibes-lab-01/common-pr65/code`, so give your agent that folder, not pr146's. For Claude Code:
 
 ```bash
 cd ~/beyond-vibes-lab-01/common-pr65/docs
-claude -p "$(cat ../TASK.md)" --add-dir ../code --permission-mode acceptEdits \
-  --disallowedTools WebFetch WebSearch | tee ../my-reply.md
+claude -p "$(cat ~/beyond-vibes-lab-01/common-pr65/TASK.md)" \
+  --add-dir ~/beyond-vibes-lab-01/common-pr65/code --permission-mode acceptEdits \
+  --disallowedTools WebFetch WebSearch | tee ~/beyond-vibes-lab-01/common-pr65/my-reply.md
 ```
 
-For other tools, use the [agent notes](../README.md#agent-notes) with `common-pr65` in place of `pr146`. With an interactive tool, start a **new** session, paste the prompt setup printed (it's also in `TASK.md`), and let it finish without steering it.
+For other tools, use the [agent notes](../README.md#agent-notes) with `common-pr65` in place of `pr146` in every path. With an interactive tool, start a **new** session, paste the prompt from `~/beyond-vibes-lab-01/common-pr65/TASK.md`, and let it finish without steering it.
 
 ## Score it
 
@@ -38,13 +41,21 @@ For other tools, use the [agent notes](../README.md#agent-notes) with `common-pr
 | The agent replied `NO_DOC_CHANGES_NEEDED` and changed no files | 100 |
 | The agent wrote a patch, or said no change was needed but edited files anyway | 0 |
 
-Check for edits from your `beyond-vibes-labs` clone:
+Check whether the agent edited any files:
 
 ```bash
+cd ~/beyond-vibes-labs
 lab-01/show-patch.sh common-pr65
 ```
 
-In PowerShell, run `powershell -ExecutionPolicy Bypass -File .\lab-01\show-patch.ps1 common-pr65`. The page that opens says whether the agent changed any files.
+In PowerShell:
+
+```powershell
+cd ~\beyond-vibes-labs
+powershell -ExecutionPolicy Bypass -File .\lab-01\show-patch.ps1 common-pr65
+```
+
+The page that opens says either that the agent didn't change any files or which files it changed. The agent's final reply is in `~/beyond-vibes-lab-01/common-pr65/my-reply.md`.
 
 ## If it wrote a patch, find the cue that misled it
 

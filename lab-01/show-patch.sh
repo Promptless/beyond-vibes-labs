@@ -7,11 +7,13 @@
 # ~/beyond-vibes-lab-01 by default. The script writes two files next to docs/:
 #   my-patch.diff   every change the agent made, new files included
 #   my-patch.html   the same changes word by word: added text in green,
-#                   removed text struck through in red
+#                   removed text struck through in red. Only the changed
+#                   parts of each file are shown.
 # and opens my-patch.html unless you pass --no-open.
 
 set -euo pipefail
 
+LAB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEST="${HOME}/beyond-vibes-lab-01"
 TASK=pr146
 OPEN=1
@@ -37,7 +39,7 @@ while [ $# -gt 0 ]; do
       shift
       ;;
     -h|--help)
-      sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+      sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
       exit 0
       ;;
     -*)
@@ -52,7 +54,7 @@ done
 
 task_dir="$DEST/$TASK"
 docs="$task_dir/docs"
-[ -d "$docs/.git" ] || die "no workspace at $docs. Run lab-01/setup.sh first."
+[ -d "$docs/.git" ] || die "no workspace at $docs. Build it first by running $LAB_DIR/setup.sh"
 
 # Stage everything into a throwaway index, so new files show up and the
 # workspace's own index is left alone.
@@ -92,7 +94,7 @@ EOF
   if [ "$files" = 0 ]; then
     printf '<p class="meta">Your agent didn'"'"'t change any files.</p>\n'
   else
-    printf '<p class="meta">%s file(s) changed. <span class="key"><ins>Green</ins> is text the agent added; <del>red</del> is text it removed.</span> The same changes are saved in my-patch.diff, next to this page.</p>\n' "$files"
+    printf '<p class="meta">%s file(s) changed. <span class="key"><ins>Green</ins> is text the agent added; <del>red</del> is text it removed.</span> Only the changed parts of each file are shown; everything else in the file is unchanged. The same changes are saved in my-patch.diff, next to this page.</p>\n' "$files"
     GIT_INDEX_FILE="$index" git -C "$docs" diff --cached --no-color --word-diff=porcelain -U3 | awk '
       function esc(s) { gsub(/&/, "\\&amp;", s); gsub(/</, "\\&lt;", s); gsub(/>/, "\\&gt;", s); return s }
       function close_text() { if (intext) { printf "</div>\n"; intext = 0 } }

@@ -11,157 +11,207 @@ You'll run one documentation task with the agent setup you use every day, score 
 
 ## What this is, and what it isn't
 
-The task is `doc-detective-doc-detective-pr146` from DoGBench's public dev split. It comes from a real pull request that lets Doc Detective's `--input` option take several comma-separated paths, and the job is to update the README to match. The rubric was validated by the project's maintainer.
+The task is `doc-detective-doc-detective-pr146` from DoGBench's public dev split. It comes from a real pull request, Doc Detective pull request #146, that lets Doc Detective's `--input` option take several comma-separated paths. The job is to update Doc Detective's README to match. The rubric was validated by the project's maintainer.
 
 Your score is **one run of one task, judged by you**. It isn't a DoGBench score and doesn't rank your agent against the leaderboard. DoGBench runs 292 tasks and uses an LLM judge. What one task gives you is a concrete, explainable look at where your setup succeeds and fails.
 
-Don't open anything in `scoring/` until your agent finishes. Don't open this task's page on dogbench.ai or `scoring/worked-example.md` until you've scored your patch: both show the published verdicts.
+## Follow along in a browser
 
-## Before the lab (10 minutes)
+If you can't install or run anything, for example on a locked-down work laptop, you can still do the scoring half of the lab in your browser:
 
-You need:
+1. Watch Manny run the task on screen and open his agent's changes.
+2. Score that patch with the [score sheet](https://github.com/Promptless/beyond-vibes-labs/blob/main/lab-01/scoring/score-sheet.md) and the [rubric](https://github.com/Promptless/beyond-vibes-labs/blob/main/lab-01/scoring/rubric-pr146.md).
+3. Tag it with the [tag sheet](https://github.com/Promptless/beyond-vibes-labs/blob/main/lab-01/tags/tag-sheet.md).
+4. Compare your verdicts with the [worked example](https://github.com/Promptless/beyond-vibes-labs/blob/main/lab-01/scoring/worked-example.md), which scores a published patch for the same task.
 
-- **Git**
-- **The agent you use day to day**, installed and signed in: Claude Code, Codex, Copilot, Cursor, OpenCode, or another
+## The folders you'll use
+
+The lab uses two folders in your home folder (`~`). On Windows, your home folder is `C:\Users\<your name>`.
+
+| Folder | What it holds |
+| --- | --- |
+| `~/beyond-vibes-labs` | Your copy of this repository: these instructions, the scripts, and the scoring sheets. You run the scripts from here. |
+| `~/beyond-vibes-lab-01/pr146` | The task workspace that setup builds. `pr146` stands for Doc Detective pull request #146. |
+| `~/beyond-vibes-lab-01/pr146/docs` | Doc Detective's repository before the change. Your agent works here. |
+| `~/beyond-vibes-lab-01/pr146/code` | The same repository with the code change added. Your agent reads it; nobody edits it. |
+| `~/beyond-vibes-lab-01/pr146/TASK.md` | The prompt you give your agent. |
+
+Setup also builds `~/beyond-vibes-lab-01/common-pr65`, with the same layout, for the [stretch task](stretch/README.md).
+
+The workspace sits outside your copy of this repository so your agent can't read the rubric or the worked example while it works. Doc Detective's history is removed from the workspace, so the agent can't see how the maintainer actually documented the change.
+
+Each command block below starts with `cd` to the folder it needs, so you can run every block as written, top to bottom, wherever your terminal was before.
+
+## Steps
+
+Do steps 1–3 before the lab; they take about 10 minutes. In the lab, Manny works each of steps 4–8 on screen first, then you do it yourself.
+
+On Windows, run every command in **Git Bash**, which comes with Git for Windows. To use PowerShell instead, see [Windows PowerShell](#windows-powershell).
+
+### 1. Check what you need
+
+- **Git.** In a terminal, `git --version` prints a version number.
+- **The agent you use day to day**, installed and signed in: Claude Code, Codex, Copilot, Cursor, OpenCode, or another.
 - **Your usual setup**: your user-level instructions, skills, and model settings. Testing your setup is the point.
 
-Then clone this repository and build the task workspaces:
+### 2. Copy this repository to your computer
 
 ```bash
+cd ~
 git clone https://github.com/Promptless/beyond-vibes-labs.git
-cd beyond-vibes-labs
 ```
 
-**macOS, Linux, or WSL:**
+You'll see `Cloning into 'beyond-vibes-labs'...`, and the folder `~/beyond-vibes-labs` appears.
+
+If you already have it, get the latest version instead:
 
 ```bash
+cd ~/beyond-vibes-labs
+git pull
+```
+
+### 3. Build the task workspace
+
+```bash
+cd ~/beyond-vibes-labs
 lab-01/setup.sh
 ```
 
-**Windows (PowerShell):**
+Setup takes under a minute and needs a network connection. You'll see `Setting up pr146 ...` and `done` for each task, then your task folder, then the task prompt between a `copy from the next line` marker and a `copy to the line above` marker. The same prompt is saved in `~/beyond-vibes-lab-01/pr146/TASK.md`.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1
-```
+If the workspace already exists, setup asks whether to replace it. Type `y` and press Enter to start fresh, or just press Enter to keep it.
 
-Or run `lab-01/setup.sh` from Git Bash, which comes with Git for Windows. The PowerShell script runs the same script through Git Bash.
+### 4. Run your agent (10 minutes)
 
-Setup takes under a minute and needs only Git and a network connection. It creates `~/beyond-vibes-lab-01` (on Windows, `%USERPROFILE%\beyond-vibes-lab-01`), a separate folder from your `beyond-vibes-labs` clone, with one folder per task:
+Run your agent once on the task, with web access off. Don't open the files in `lab-01/scoring/` yet.
 
-```
-~/beyond-vibes-lab-01/
-├── pr146/
-│   ├── docs/      Doc Detective's repository before the change. Your agent works here.
-│   ├── code/      The same repository with the code change as its latest commit. Read it; don't edit it.
-│   └── TASK.md    The prompt you'll paste into your agent.
-└── common-pr65/   The stretch task, with the same layout.
-```
-
-When setup finishes, it prints the pr146 prompt between a `copy from the next line` marker and a `copy to the line above` marker. That's the text you'll paste into your agent.
-
-Run your agent in the workspace, not in your clone. The workspaces sit outside this repository so your agent can't read the rubric or the worked example while it works. Upstream history and remotes are removed, so the agent can't see how the maintainer actually documented the change.
-
-## During the lab
-
-Manny works the task on screen first, from setup to tags. Then you do each step yourself.
-
-### 1. Run (10 minutes)
-
-Run your agent once on the task, with web access off. For Claude Code and Codex, one command sends the prompt and saves the agent's final reply to `my-reply.md`:
+**Claude Code:**
 
 ```bash
 cd ~/beyond-vibes-lab-01/pr146/docs
-
-# Claude Code
-claude -p "$(cat ../TASK.md)" --add-dir ../code --permission-mode acceptEdits \
-  --disallowedTools WebFetch WebSearch | tee ../my-reply.md
-
-# or Codex
-codex exec --sandbox workspace-write -c web_search='"disabled"' \
-  -o ../my-reply.md "$(cat ../TASK.md)"
+claude -p "$(cat ~/beyond-vibes-lab-01/pr146/TASK.md)" \
+  --add-dir ~/beyond-vibes-lab-01/pr146/code --permission-mode acceptEdits \
+  --disallowedTools WebFetch WebSearch | tee ~/beyond-vibes-lab-01/pr146/my-reply.md
 ```
 
-A run takes a minute or two and shows little while it works. Wait for your terminal prompt to come back, and don't steer the agent or ask for a second draft.
-
-For Copilot, Cursor, or OpenCode, start a **new** session in `~/beyond-vibes-lab-01/pr146/docs` as the [agent notes](#agent-notes) describe, and paste the prompt setup printed (it's also in `TASK.md`). If it asks a question, answer "use your judgment". When it finishes, copy its final message into `~/beyond-vibes-lab-01/pr146/my-reply.md`.
-
-Then save the agent's changes and open them as a page in your browser, with added text in green and removed text struck through in red. From your `beyond-vibes-labs` clone:
+**Codex:**
 
 ```bash
+cd ~/beyond-vibes-lab-01/pr146/docs
+codex exec --sandbox workspace-write -c web_search='"disabled"' \
+  -o ~/beyond-vibes-lab-01/pr146/my-reply.md "$(cat ~/beyond-vibes-lab-01/pr146/TASK.md)"
+```
+
+A run takes a minute or two and shows little while it works. Don't steer the agent or ask for a second draft. When your terminal prompt comes back, the agent's final reply is on screen and saved in `~/beyond-vibes-lab-01/pr146/my-reply.md`.
+
+**Any other agent** (Copilot, Cursor, OpenCode, and so on):
+
+1. Start a **new** session in `~/beyond-vibes-lab-01/pr146/docs`. The [agent notes](#agent-notes) give the command or settings for your tool.
+2. Paste the prompt from `~/beyond-vibes-lab-01/pr146/TASK.md` as your first message. It's the same text setup printed.
+3. If the agent asks a question, answer "use your judgment".
+4. When it finishes, create the file `~/beyond-vibes-lab-01/pr146/my-reply.md` in any text editor and paste the agent's final message into it.
+
+If your agent replied `NO_DOC_CHANGES_NEEDED`, that's its decision. Keep going.
+
+### 5. Open your agent's changes
+
+```bash
+cd ~/beyond-vibes-labs
 lab-01/show-patch.sh
 ```
 
-In PowerShell:
+You'll see two lines starting with `Saved`, and a page called `my-patch.html` opens in your browser. It lists each file the agent changed, with text it added in green and text it removed struck through in red. Only the changed parts of each file are shown; everything else in the file is unchanged. If the page doesn't open, open `~/beyond-vibes-lab-01/pr146/my-patch.html` in your browser yourself.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\lab-01\show-patch.ps1
+The script also saves the same changes as `~/beyond-vibes-lab-01/pr146/my-patch.diff`. Run it again any time to reopen the page.
+
+### 6. Score the patch (10 minutes)
+
+Open the [score sheet](scoring/score-sheet.md) and the [rubric](scoring/rubric-pr146.md), with `my-patch.html` beside them. The score sheet takes you through it: a verdict for each criterion with the line from the patch behind it, then the score, which you work out by hand.
+
+Don't read the worked example's verdicts or this task's page on dogbench.ai until you've scored your patch: both show the published verdicts.
+
+### 7. Tag the failure modes (5 minutes)
+
+Open the [tag sheet](tags/tag-sheet.md). First mark the failure modes you see in `my-patch.html`. Then look back at what your agent did before it wrote, and mark the investigation patterns you see there.
+
+To look back at what your agent did:
+
+- **Claude Code:** reopen the session, then scroll up.
+
+  ```bash
+  cd ~/beyond-vibes-lab-01/pr146/docs
+  claude --continue
+  ```
+
+- **Codex:** scroll up in the terminal where it ran.
+- **Any other agent:** scroll up in its chat or session window.
+
+### 8. Post your results and compare (5 minutes)
+
+Post your score, your tags, and your tool and model to the room's results sheet, which is linked in the session chat. Don't post the patch itself.
+
+Then read [the worked example](scoring/worked-example.md), which scores the only published patch that passed C1, line by line.
+
+If you finish early, try the [stretch task](stretch/README.md). The session ends with a 15-minute clinic, not recorded: bring questions about your own setup's instructions, skills, models, and review habits.
+
+## Run the task again
+
+To rerun the task after you change your setup, rebuild a clean workspace and repeat steps 4–8. Rebuilding deletes everything in `~/beyond-vibes-lab-01/pr146`, so first move `my-patch.diff`, `my-patch.html`, and `my-reply.md` to another folder.
+
+```bash
+cd ~/beyond-vibes-labs
+lab-01/setup.sh --force pr146
 ```
 
-It saves `my-patch.diff` and `my-patch.html` in `~/beyond-vibes-lab-01/pr146`, new files included, and opens the page. Run it again any time to reopen it.
-
-Keep the transcript for the tag step. For Claude Code, run `claude --continue` in the same `docs` folder to reopen the session. Codex prints its steps in your terminal.
-
-If your agent replied `NO_DOC_CHANGES_NEEDED`, that's its decision. Move on.
-
-### 2. Score (10 minutes)
-
-Open [the score sheet](scoring/score-sheet.md) and [the rubric](scoring/rubric-pr146.md), with your agent's changes in `my-patch.html` beside them. Give each criterion a verdict, quoting the line from your patch behind it. If C1 fails or C2 is violated, the score can't go above 60.
-
-### 3. Tag (5 minutes)
-
-Use [the tag sheet](tags/tag-sheet.md) to mark the failure modes in your patch, then the investigation patterns in your agent's transcript. If you finish early, start the [stretch task](stretch/README.md).
-
-### 4. Compare (5 minutes)
-
-Post your score, tags, and tool and model to the room's results sheet, which is linked in the session chat. Then read [the worked example](scoring/worked-example.md), which scores the only published patch that passed C1, line by line.
-
-### 5. Clinic (15 minutes, not recorded)
-
-Bring questions about your own setup: instructions, skills, models, and review habits.
+Bring the [review checklist](checklist/review-checklist.md) to your agent's next docs PR.
 
 ## Agent notes
 
-The prompt in `TASK.md` is DoGBench's frozen prompt for this task, unchanged except for two edits:
+The prompt in `~/beyond-vibes-lab-01/pr146/TASK.md` is DoGBench's frozen prompt for this task, unchanged except for two edits:
 
 - The code path is `../code` instead of `/task/code_repo`.
 - One closing line asks the agent not to browse the web.
 
 The agents in the DoGBench paper ran without network access. Turning web access off in your tool keeps your run comparable, and stops the agent from looking up the merged pull request.
 
-Your user-level instructions and skills load as usual. Project-level files from your own repositories (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules`, and so on) don't, because the agent is working in Doc Detective's repository. To test one, copy it into `pr146/docs` before you start, and say so on the results sheet.
+Your user-level instructions and skills load as usual. Project-level files from your own repositories (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules`, and so on) don't, because the agent is working in Doc Detective's repository. To test one, copy it into `~/beyond-vibes-lab-01/pr146/docs` before you start, and say so on the results sheet. The file shows up on `my-patch.html` as a new file; leave it out when you score.
 
-Full runs of this task with Claude Code and with Codex CLI each took under a minute, using the commands below. The notes for the other tools come from each tool's documentation, checked on Nov 13, 2026.
+Full runs of this task with Claude Code and with Codex CLI each took under a minute, using the commands in step 4. The notes for the other tools come from each tool's documentation, checked on Nov 13, 2026.
 
 #### Claude Code
 
-Use the command in [Run](#1-run-10-minutes). `-p` runs the prompt once without an interactive session, and `--permission-mode acceptEdits` lets it edit `docs/` without stopping to ask. `--add-dir ../code` lets Claude Code read the code change without asking for each file. `--disallowedTools` removes the web tools for this session. To work interactively instead, run `claude --add-dir ../code --disallowedTools WebFetch WebSearch` and paste the prompt. ([CLI reference](https://code.claude.com/docs/en/cli-reference), [permissions](https://code.claude.com/docs/en/permissions))
+Use the command in [step 4](#4-run-your-agent-10-minutes). `-p` runs the prompt once without an interactive session, and `--permission-mode acceptEdits` lets it edit `docs/` without stopping to ask. `--add-dir` lets Claude Code read the code change without asking for each file. `--disallowedTools` removes the web tools for this session. ([CLI reference](https://code.claude.com/docs/en/cli-reference), [permissions](https://code.claude.com/docs/en/permissions))
+
+To work interactively instead, start Claude Code like this and paste the prompt:
+
+```bash
+cd ~/beyond-vibes-lab-01/pr146/docs
+claude --add-dir ~/beyond-vibes-lab-01/pr146/code --disallowedTools WebFetch WebSearch
+```
 
 #### Codex CLI
 
-Use the command in [Run](#1-run-10-minutes). `codex exec` runs the prompt once, and `-o` writes the final reply to a file. The `workspace-write` sandbox limits edits to `docs/` and turns network access off. Codex can still read `../code`. `web_search="disabled"` turns off Codex's built-in web search, which otherwise defaults to a cached index. Don't pass `--search`. ([sandboxing](https://learn.chatgpt.com/docs/sandboxing), [config reference](https://learn.chatgpt.com/docs/config-file/config-reference))
+Use the command in [step 4](#4-run-your-agent-10-minutes). `codex exec` runs the prompt once, and `-o` writes the final reply to a file. The `workspace-write` sandbox limits edits to `docs/` and turns network access off. Codex can still read the `code` folder. `web_search="disabled"` turns off Codex's built-in web search, which otherwise defaults to a cached index. Don't pass `--search`. ([sandboxing](https://learn.chatgpt.com/docs/sandboxing), [config reference](https://learn.chatgpt.com/docs/config-file/config-reference))
 
 #### GitHub Copilot CLI
 
 ```bash
-copilot -C ~/beyond-vibes-lab-01/pr146/docs --add-dir=../code --deny-tool='url'
+cd ~/beyond-vibes-lab-01/pr146/docs
+copilot --add-dir ~/beyond-vibes-lab-01/pr146/code --deny-tool='url'
 ```
 
-`--add-dir=../code` grants access to the code change. `--deny-tool='url'` blocks URL access through web fetch and the shell. ([command reference](https://docs.github.com/en/copilot/reference/cli-command-reference))
+`--add-dir` grants access to the code change. `--deny-tool='url'` blocks URL access through web fetch and the shell. ([command reference](https://docs.github.com/en/copilot/reference/cli-command-reference))
 
 #### Cursor
 
 - **Editor:** open `~/beyond-vibes-lab-01/pr146/docs` as the folder, then start a new Agent chat.
 - **CLI:** run `agent --workspace ~/beyond-vibes-lab-01/pr146/docs`.
 
-Cursor reads files outside the workspace, including `../code`, without asking by default. Its docs don't describe a switch that turns off the web search tool. To hold web fetches for your approval, set **Settings > Agents > Approvals & Execution** to **Allowlist**, and decline any web request the agent makes. ([agent security](https://cursor.com/docs/agent/security), [CLI permissions](https://cursor.com/docs/cli/reference/permissions))
+Cursor reads files outside the workspace, including the `code` folder, without asking by default. Its docs don't describe a switch that turns off the web search tool. To hold web fetches for your approval, set **Settings > Agents > Approvals & Execution** to **Allowlist**, and decline any web request the agent makes. ([agent security](https://cursor.com/docs/agent/security), [CLI permissions](https://cursor.com/docs/cli/reference/permissions))
 
 #### OpenCode
 
-```bash
-opencode ~/beyond-vibes-lab-01/pr146/docs
-```
-
-Before you start, create `opencode.jsonc` in `docs/` to turn off web fetch and web search. OpenCode 2 uses this form:
+Before you start, create the file `~/beyond-vibes-lab-01/pr146/docs/opencode.jsonc` to turn off web fetch and web search. OpenCode 2 uses this form:
 
 ```jsonc
 {
@@ -172,29 +222,44 @@ Before you start, create `opencode.jsonc` in `docs/` to turn off web fetch and w
 }
 ```
 
-OpenCode 1 uses `{ "permission": { "webfetch": "deny", "websearch": "deny" } }`, and asks before it reads `../code`. Approve that read when it asks. ([permissions](https://opencode.ai/docs/permissions/), [migrating from v1](https://opencode.ai/docs/migrate-v1/))
+OpenCode 1 uses `{ "permission": { "webfetch": "deny", "websearch": "deny" } }`. Then start OpenCode in the workspace:
+
+```bash
+opencode ~/beyond-vibes-lab-01/pr146/docs
+```
+
+OpenCode 1 asks before it reads the `code` folder. Approve that read when it asks. `opencode.jsonc` shows up on `my-patch.html` as a new file; leave it out when you score. ([permissions](https://opencode.ai/docs/permissions/), [migrating from v1](https://opencode.ai/docs/migrate-v1/))
 
 #### Any other agent
 
-Start it in `~/beyond-vibes-lab-01/pr146/docs`, let it read `../code`, and turn off web access if the tool allows it. If it can't be turned off, note that on the results sheet.
+Start it in `~/beyond-vibes-lab-01/pr146/docs`, let it read `~/beyond-vibes-lab-01/pr146/code`, and turn off web access if the tool allows it. If it can't be turned off, note that on the results sheet.
 
-## After the lab
+#### Windows PowerShell
 
-To rerun the task after changing your setup, rebuild a clean workspace from your `beyond-vibes-labs` clone and run it again:
+The scripts also run from PowerShell. They need Git for Windows, which they use behind the scenes.
 
-```bash
-lab-01/setup.sh --force pr146
-```
-
-In PowerShell:
+Build the workspace (step 3):
 
 ```powershell
+cd ~\beyond-vibes-labs
+powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1
+```
+
+Open your agent's changes (step 5):
+
+```powershell
+cd ~\beyond-vibes-labs
+powershell -ExecutionPolicy Bypass -File .\lab-01\show-patch.ps1
+```
+
+Rebuild a clean workspace:
+
+```powershell
+cd ~\beyond-vibes-labs
 powershell -ExecutionPolicy Bypass -File .\lab-01\setup.ps1 --force pr146
 ```
 
-`--force` deletes the old workspace, including your saved patch, so move `my-patch.diff`, `my-patch.html`, and `my-reply.md` somewhere else first.
-
-Bring the [review checklist](checklist/review-checklist.md) to your agent's next docs PR.
+The Claude Code and Codex commands in step 4 are written for Git Bash. In PowerShell, start your agent interactively in `~\beyond-vibes-lab-01\pr146\docs` and paste the prompt from `~\beyond-vibes-lab-01\pr146\TASK.md`.
 
 ## Credits
 

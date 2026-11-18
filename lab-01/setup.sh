@@ -231,33 +231,48 @@ for task in "${TASKS[@]}"; do
   [ "$task" = pr146 ] && main=pr146
 done
 
+task_dir="$DEST/$main"
+if [ "$main" = pr146 ]; then
+  run_guide="step 4 in lab-01/README.md"
+  show_guide="step 5 in lab-01/README.md"
+else
+  run_guide="lab-01/stretch/README.md"
+  show_guide="lab-01/stretch/README.md"
+fi
+
 cat <<EOF
 
 Workspaces are ready in $DEST
 
-To run the $main task with any agent, start it in $DEST/$main/docs
+Your task folder is $task_dir
+Next, run your agent: $run_guide.
+
+To run the $main task with any agent, start it in $task_dir/docs
 and paste everything between the two lines below as your first message.
-It's also saved in $DEST/$main/TASK.md.
+It's also saved in $task_dir/TASK.md.
 
 -------------------- copy from the next line --------------------
 EOF
-cat "$DEST/$main/TASK.md"
+cat "$task_dir/TASK.md"
 printf '\n-------------------- copy to the line above ---------------------\n'
 
 cat <<EOF
 
 With Claude Code or Codex, skip the paste and run one of these instead.
-The agent's final reply is saved to $DEST/$main/my-reply.md.
+The agent's final reply is saved to $task_dir/my-reply.md.
 
-  cd "$DEST/$main/docs"
+Claude Code:
 
-EOF
-cat <<'EOF'
-  claude -p "$(cat ../TASK.md)" --add-dir ../code --permission-mode acceptEdits \
-    --disallowedTools WebFetch WebSearch | tee ../my-reply.md
+  cd "$task_dir/docs"
+  claude -p "\$(cat "$task_dir/TASK.md")" \\
+    --add-dir "$task_dir/code" --permission-mode acceptEdits \\
+    --disallowedTools WebFetch WebSearch | tee "$task_dir/my-reply.md"
 
-  codex exec --sandbox workspace-write -c web_search='"disabled"' \
-    -o ../my-reply.md "$(cat ../TASK.md)"
+Codex:
+
+  cd "$task_dir/docs"
+  codex exec --sandbox workspace-write -c web_search='"disabled"' \\
+    -o "$task_dir/my-reply.md" "\$(cat "$task_dir/TASK.md")"
 EOF
 
 show_cmd="\"$LAB_DIR/show-patch.sh\""
@@ -265,8 +280,8 @@ show_cmd="\"$LAB_DIR/show-patch.sh\""
 [ "$main" = pr146 ] || show_cmd="$show_cmd $main"
 cat <<EOF
 
-When the agent finishes, run this to see its changes as a page in your browser.
-It also saves them to $DEST/$main/my-patch.diff.
+When the agent finishes, run this to see its changes as a page in your browser
+($show_guide). It also saves them to $task_dir/my-patch.diff.
 
   $show_cmd
 EOF

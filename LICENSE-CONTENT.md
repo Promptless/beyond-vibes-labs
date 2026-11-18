@@ -4,7 +4,7 @@ Different parts of this repository carry different licenses.
 
 | What | License |
 | --- | --- |
-| Scripts: `lab-01/setup.sh`, `lab-01/setup.ps1`, `.github/` | [Apache License 2.0](LICENSE), with attribution in [NOTICE](NOTICE) |
+| Scripts: `lab-01/setup.sh`, `lab-01/setup.ps1`, `lab-01/show-patch.sh`, `lab-01/show-patch.ps1`, `.github/` | [Apache License 2.0](LICENSE), with attribution in [NOTICE](NOTICE) |
 | Lab guides, score sheet, worked example, tag sheet, review checklist: every Markdown file not listed below | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
 | DoGBench rubric: `lab-01/scoring/rubric-pr146.md` | [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/), reproduced unmodified from the DoGBench dataset ([dataset license](https://github.com/Promptless/dogbench/blob/main/DATASET_LICENSE.md)) |
 | DoGBench task prompts: `lab-01/tasks/*.prompt.md` | Item text: CC BY-NC-ND 4.0 (DoGBench dataset). Quoted pull-request titles and descriptions keep their upstream licenses. |
